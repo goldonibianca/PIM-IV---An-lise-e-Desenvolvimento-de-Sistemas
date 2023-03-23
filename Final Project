@@ -1,0 +1,204 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+
+int main (void){
+
+//declaração variaveis
+
+    char nurse1login[10] = "claudia";
+    int nurse1password = 012345;
+    char loginsearch[15];
+    int passwordsearch;
+    int loginconf;
+    int login;
+
+    //definiçao da estrutura de cadastro
+
+struct registration{
+	char name[50];
+	char id [11];
+	int bday;
+	int bmonth;
+	int byear;
+	char phone [15];
+	char street[50];
+	int numad;
+	char compl[20];
+	char neighborhood[20];
+	char zip [8];
+	char city[30];
+	char state[15];
+	char email [50];
+	int diaday;
+	int diamonth;
+	int diayear;
+	int age;
+    int comorbidities;
+	char comlist[500];
+
+};
+
+
+  printf("\n--------------------LOGIN--------------------\n\n\n");
+
+
+printf("NOME: ");
+    scanf("%s", &loginsearch);
+
+    printf("COREN: ");
+    scanf("%i", &passwordsearch);
+
+
+    if (strcmp(loginsearch, nurse1login) == 0&&passwordsearch==nurse1password){
+
+        printf("\n\nLOGADO!\n\n");
+        login = 1;
+    }else{
+
+        printf("\n\nDADOS INVALIDOS!\n\n");
+        login = 0;
+        return 0;
+    }
+
+    if(login=1){
+
+    	struct registration pacient;
+
+        printf("\n-----------------CADASTRO DE PACIENTE-----------------\n\n\n");
+
+		printf("NOME: ");
+		fflush(stdin);
+		fgets(pacient.name, 50, stdin);
+
+		printf("\n\n DATA DE NASCIMENTO (DD/MM/AAAA): ");
+		scanf("%d/%d/%d", &pacient.bday,  &pacient.bmonth, &pacient.byear);
+
+		printf("\n\n CPF (SOMENTE NUMEROS): ");
+		fflush(stdin);
+		fgets(pacient.id, 11, stdin);
+
+		printf("\n\n TELEFONE COM DDD (SOMENTE NUMEROS): ");
+		fflush(stdin);
+        fgets(pacient.phone, 15, stdin);
+
+		printf("\n\n E-MAIL: ");
+		fflush(stdin);
+		fgets (pacient.email, 50, stdin);
+
+		printf("\n\n RUA/AVENIDA: ");
+		fgets(pacient.street, 50, stdin);
+
+		printf("\n NUMERO: ");
+		scanf("%d", &pacient.numad);
+
+		printf("\n COMPLEMENTO: ");
+		fflush(stdin);
+		fgets(pacient.compl, 20, stdin);
+
+		printf("\n BAIRRO: ");
+		fgets(pacient.neighborhood, 20, stdin);
+
+		printf("\n CEP: ");
+		fgets(pacient.zip, 8, stdin);
+
+		printf("\n CIDADE: ");
+		fflush(stdin);
+		fgets(pacient.city, 30, stdin);
+
+		printf("\n ESTADO: ");
+		fgets(pacient.state, 15, stdin);
+
+		printf("\n O PACIENTE ESTA NO GRUPO DE RISCO? (SIM=1/NAO=0)");
+		fflush(stdin);
+        scanf("%i", &pacient.comorbidities);
+            if (pacient.comorbidities==1){
+                printf("\N LISTE AS COMORBIDADES:\n");
+                fflush(stdin);
+                fgets(pacient.comlist, 500, stdin);
+            }
+
+
+		printf("\n DATA DO DIAGNOSTICO (DD/MM/AAAA): ");
+		fflush(stdin);
+        scanf("%i/%i/%i", &pacient.diaday, &pacient.diamonth, &pacient.diayear);
+
+
+
+        pacient.age=pacient.diayear-pacient.byear;
+
+	    if(pacient.bmonth>pacient.diamonth||(pacient.bmonth==pacient.diamonth&&pacient.bday>pacient.diaday)){
+        pacient.age=pacient.age-1;}
+			if(pacient.age>=65||pacient.comorbidities==1){
+				printf("CADASTRO COMPLETO. PACIENTE SALVO NO GRUPO DE RISCO");
+			}else{
+				printf("CADASTRO COMPLETO.");
+			}
+
+
+        FILE *form;
+        form = (fopen("CADASTRO PACIENTE COVID-19.txt", "a"));
+
+        fprintf(form, "\n\n--------------------------------------------");
+          fflush(form);
+        fprintf(form, "\n NOME: %s", pacient.name);
+          fflush(form);
+        fprintf(form, "\n IDADE: %i", pacient.age);
+          fflush(form);
+        fprintf(form, "\n CPF: %s", pacient.id);
+          fflush(form);
+        fprintf(form, "\n DATA DE NASCIMENTO: %d/%d/%d ", pacient.bday, pacient.bmonth, pacient.byear);
+          fflush(form);
+        fprintf(form, "\n TELEFONE: %s", pacient.phone);
+          fflush(form);
+        fprintf(form, "\n CEP: %s", pacient.zip);
+          fflush(form);
+        fprintf(form, "\n RUA/AVENIDA: %s", pacient.street);
+          fflush(form);
+        fprintf(form, "\n NUMERO: %i", pacient.numad);
+          fflush(form);
+        fprintf(form, "\n BAIRRO: %s", pacient.neighborhood);
+          fflush(form);
+        fprintf(form, "\n CIDADE: %s", pacient.city);
+          fflush(form);
+        fprintf(form, "\n ESTADO: %s", pacient.state);
+          fflush(form);
+        fprintf(form, "\n E-MAIL: %s", pacient.email);
+          fflush(form);
+        fprintf(form, "\n DATA DO DIAGNOSTICO: %i/%i/%i", pacient.diaday, pacient.diamonth, pacient.diayear);
+          fflush(form);
+        fprintf(form, "\n COMORBIDADES: %s", pacient.comlist);
+            if(pacient.comorbidities==0&&pacient.age<65){
+                printf("SEM COMORBIDADES.");
+            }
+            if(pacient.comorbidities==0&&pacient.age>=65){
+                printf("GRUPO DE RISCO ETÁRIO.");
+            }
+        fflush(form);
+
+
+
+              if(pacient.comorbidities==1||pacient.age>=65){
+			        FILE *comorbiditiesgroup;
+			        comorbiditiesgroup =(fopen("PACIENTES NO GRUPO DE RISCO.txt", "a"));
+
+
+            fprintf(comorbiditiesgroup, "\n\n--------------------------------------------");
+            fflush(comorbiditiesgroup);
+            fprintf(comorbiditiesgroup, "\n\n NOME: %s", pacient.name);
+            fflush(comorbiditiesgroup);
+            fprintf(comorbiditiesgroup, "\n ENDEREÇO: RUA/AVENIDA %s N: %i COMPL: %s\n CEP: %s", pacient.street, pacient.numad, pacient.compl, pacient.zip);
+            fflush(comorbiditiesgroup);
+            fprintf(comorbiditiesgroup, "\n IDADE: %d", pacient.age);
+            fflush(comorbiditiesgroup);
+            fprintf(comorbiditiesgroup, "\n COMORBIDADES: %s \n", pacient.comlist);
+            fflush(comorbiditiesgroup);
+            fclose(comorbiditiesgroup);
+            }
+
+        fclose(form);
+
+    }
+return 0;
+}
+
